@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360" fill="none">
+  <rect width="640" height="360" rx="24" fill="#ECFEFF"/>
+  <rect x="32" y="32" width="576" height="296" rx="16" fill="white" stroke="#A5F3FC"/>
+  <text x="56" y="80" fill="#0E7490" font-size="28" font-family="Arial" font-weight="700">3. Save in this app</text>
+  <rect x="56" y="118" width="528" height="58" rx="12" fill="#F8FAFC" stroke="#CBD5E1"/>
+  <text x="72" y="152" fill="#334155" font-size="18" font-family="Arial">Paste API key in Personal API Key field</text>
+  <rect x="420" y="220" width="164" height="50" rx="10" fill="#4F46E5"/>
+  <text x="448" y="252" fill="white" font-size="18" font-family="Arial" font-weight="700">Save Settings</text>
+</svg>

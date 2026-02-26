@@ -10,7 +10,7 @@
   <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-violet-400/25 rounded-full blur-[120px] animate-pulse" style="animation-delay: 2s;"></div>
 
   <!-- Header -->
-  <header class="relative z-20 glass-panel border-b-0 m-4 rounded-3xl">
+  <header class="relative z-20 glass-panel border-b-0 m-4 rounded-3xl ring-1 ring-white/40 dark:ring-slate-700/40">
     <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
       <div class="flex items-center gap-4">
         <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center text-white shadow-lg transform rotate-3 hover:rotate-0 transition-transform duration-300">
@@ -49,11 +49,16 @@
   </header>
 
   <!-- Main Content -->
-  <main class="relative z-10 flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pb-8 grid grid-cols-1 lg:grid-cols-12 gap-6 overflow-hidden">
+  <main class="relative z-10 flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pb-8 pt-2 grid grid-cols-1 lg:grid-cols-12 gap-6 overflow-hidden">
     
     <!-- Form Section -->
     <div class="lg:col-span-5 flex flex-col gap-6 h-[calc(100vh-9rem)] overflow-y-auto pr-2 custom-scrollbar pb-4">
-      <div class="glass-card p-8">
+      <div class="glass-card p-8 ring-1 ring-white/60 dark:ring-slate-700/40 space-y-6">
+        <div class="rounded-2xl border border-indigo-200/70 dark:border-indigo-500/30 bg-indigo-50/60 dark:bg-indigo-500/5 px-4 py-3">
+          <p class="text-xs font-bold uppercase tracking-[0.18em] text-indigo-600 dark:text-indigo-300">{{ t().promptContext }}</p>
+          <p class="mt-1 text-xs text-indigo-900/80 dark:text-indigo-100/80">{{ t().subtitle }}</p>
+        </div>
+
         <form [formGroup]="agentForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-6">
           
           <!-- Project Name -->
@@ -144,6 +149,12 @@
                 </div>
               </div>
             </div>
+          </div>
+
+          <div class="flex items-center gap-3 pt-1">
+            <div class="h-px flex-1 bg-indigo-200/80 dark:bg-indigo-400/20"></div>
+            <span class="text-[10px] uppercase tracking-[0.18em] font-bold text-indigo-500 dark:text-indigo-300">{{ t().advancedInputs }}</span>
+            <div class="h-px flex-1 bg-indigo-200/80 dark:bg-indigo-400/20"></div>
           </div>
 
           <!-- Advanced Fields (Collapsible or just listed) -->
@@ -281,10 +292,10 @@
 
     <!-- Preview Section -->
     <div class="lg:col-span-7 flex flex-col h-[calc(100vh-9rem)]">
-      <div class="glass-card flex flex-col h-full overflow-hidden">
+      <div class="glass-card flex flex-col h-full overflow-hidden ring-1 ring-white/60 dark:ring-slate-700/40">
         
         <!-- Preview Header -->
-        <div class="flex items-center justify-between px-8 py-5 border-b border-white/20 dark:border-slate-700/20 bg-white/20 dark:bg-slate-800/20 backdrop-blur-xl">
+        <div class="flex items-center justify-between px-8 py-5 border-b border-white/40 dark:border-slate-700/40 bg-white/35 dark:bg-slate-800/35 backdrop-blur-xl">
           <div class="flex items-center gap-3">
             <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
             <h2 class="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">
@@ -328,21 +339,13 @@
               <mat-icon class="scale-90">html</mat-icon>
               <span class="hidden sm:inline">HTML</span>
             </button>
-            <button 
-              (click)="downloadPdf()"
-              [disabled]="!generatedMarkdown()"
-              class="flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-xl bg-violet-500 hover:bg-violet-400 text-white transition-all disabled:opacity-30"
-              [title]="t().downloadPdf"
-            >
-              <mat-icon class="scale-90">picture_as_pdf</mat-icon>
-              <span class="hidden sm:inline">PDF</span>
-            </button>
+            
           </div>
         </div>
 
         <!-- Preview Content -->
         <div 
-          class="flex-1 p-8 overflow-y-auto bg-white/5 dark:bg-slate-950/5 font-mono custom-scrollbar" 
+          class="flex-1 p-8 overflow-y-auto bg-white/40 dark:bg-slate-950/30 font-mono custom-scrollbar" 
           [class.text-xs]="settingsService.fontSize() === 'small'"
           [class.text-sm]="settingsService.fontSize() === 'medium'"
           [class.text-base]="settingsService.fontSize() === 'large'"
@@ -462,6 +465,15 @@
             } @else if (apiKeyStatus() === 'invalid') {
               <p class="text-[10px] font-bold text-rose-600 dark:text-rose-400 px-1">{{ t().keyInvalid }}</p>
             }
+
+            <button
+              type="button"
+              (click)="openApiKeyGuide()"
+              class="mt-2 inline-flex items-center gap-2 text-xs font-bold text-indigo-600 dark:text-indigo-300 px-3 py-2 rounded-xl bg-indigo-500/10 hover:bg-indigo-500/20 transition-colors"
+            >
+              <mat-icon class="text-base">help</mat-icon>
+              {{ t().apiKeyGuideButton }}
+            </button>
           </div>
 
           <!-- Display Settings -->
@@ -518,4 +530,64 @@
       </div>
     </div>
   }
+
+  @if (showApiKeyRequiredDialog()) {
+    <div class="fixed inset-0 z-[120] flex items-center justify-center p-4 sm:p-6">
+      <div class="absolute inset-0 bg-slate-950/70 backdrop-blur-sm" (click)="closeApiKeyRequiredDialog()" (keydown.escape)="closeApiKeyRequiredDialog()" tabindex="-1" role="button" aria-label="Close API key required dialog"></div>
+      <div class="relative w-full max-w-md glass-card p-6 sm:p-8 ring-1 ring-white/60 dark:ring-slate-700/40">
+        <div class="flex items-start gap-3">
+          <div class="w-10 h-10 rounded-xl bg-amber-500/15 text-amber-500 flex items-center justify-center">
+            <mat-icon>key</mat-icon>
+          </div>
+          <div class="flex-1">
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white">{{ t().apiKeyRequiredTitle }}</h3>
+            <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">{{ t().apiKeyRequiredDesc }}</p>
+          </div>
+        </div>
+
+        <div class="mt-6 flex items-center justify-end gap-3">
+          <button type="button" (click)="closeApiKeyRequiredDialog()" class="px-4 py-2 rounded-xl text-sm font-semibold text-slate-500 hover:text-slate-700 dark:hover:text-slate-200 transition-colors">
+            {{ t().close }}
+          </button>
+          <button type="button" (click)="openSettingsForApiKey()" class="px-4 py-2 rounded-xl text-sm font-semibold bg-indigo-500 text-white hover:bg-indigo-400 transition-colors inline-flex items-center gap-2">
+            <mat-icon class="text-base">settings</mat-icon>
+            {{ t().apiKeyGoToSettings }}
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (showApiKeyGuideDialog()) {
+    <div class="fixed inset-0 z-[130] flex items-center justify-center p-4 sm:p-6">
+      <div class="absolute inset-0 bg-slate-950/70 backdrop-blur-sm" (click)="closeApiKeyGuide()" (keydown.escape)="closeApiKeyGuide()" tabindex="-1" role="button" aria-label="Close API key guide dialog"></div>
+      <div class="relative w-full max-w-3xl glass-card p-6 sm:p-8 ring-1 ring-white/60 dark:ring-slate-700/40">
+        <div class="flex items-center justify-between gap-4">
+          <h3 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">{{ t().apiKeyGuideTitle }}</h3>
+          <button type="button" (click)="closeApiKeyGuide()" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 transition-colors">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+
+        <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+          <article class="rounded-2xl border border-slate-200/80 dark:border-slate-700/60 bg-white/60 dark:bg-slate-900/50 p-4 space-y-3">
+            <img src="help-step-1.svg" alt="API key guide step 1" class="w-full rounded-xl border border-slate-200/70 dark:border-slate-700/60" />
+            <h4 class="text-sm font-bold text-slate-900 dark:text-white">{{ t().apiKeyGuideStep1Title }}</h4>
+            <p class="text-xs text-slate-600 dark:text-slate-300">{{ t().apiKeyGuideStep1Desc }}</p>
+          </article>
+          <article class="rounded-2xl border border-slate-200/80 dark:border-slate-700/60 bg-white/60 dark:bg-slate-900/50 p-4 space-y-3">
+            <img src="help-step-2.svg" alt="API key guide step 2" class="w-full rounded-xl border border-slate-200/70 dark:border-slate-700/60" />
+            <h4 class="text-sm font-bold text-slate-900 dark:text-white">{{ t().apiKeyGuideStep2Title }}</h4>
+            <p class="text-xs text-slate-600 dark:text-slate-300">{{ t().apiKeyGuideStep2Desc }}</p>
+          </article>
+          <article class="rounded-2xl border border-slate-200/80 dark:border-slate-700/60 bg-white/60 dark:bg-slate-900/50 p-4 space-y-3">
+            <img src="help-step-3.svg" alt="API key guide step 3" class="w-full rounded-xl border border-slate-200/70 dark:border-slate-700/60" />
+            <h4 class="text-sm font-bold text-slate-900 dark:text-white">{{ t().apiKeyGuideStep3Title }}</h4>
+            <p class="text-xs text-slate-600 dark:text-slate-300">{{ t().apiKeyGuideStep3Desc }}</p>
+          </article>
+        </div>
+      </div>
+    </div>
+  }
+
 </div>

@@ -57,6 +57,14 @@ export class SettingsService {
     }
   }
 
+
+  setShowLineNumbers(value: boolean) {
+    this.showLineNumbers.set(value);
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem('show_line_numbers', String(value));
+    }
+  }
+
   getEffectiveApiKey(envKey: string): string {
     return this.userApiKey() || envKey;
   }

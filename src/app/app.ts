@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { ThemeService } from './theme.service';
 import { LanguageService } from './language.service';
@@ -21,15 +22,51 @@ export class App {
   settingsService = inject(SettingsService);
   private geminiService = inject(GeminiService);
 
+  constructor() {
+    this.settingsForm.valueChanges.pipe(takeUntilDestroyed()).subscribe((val) => {
+      if (val.userApiKey !== undefined) {
+        this.settingsService.setApiKey((val.userApiKey || '').trim());
+      }
+      if (val.fontSize) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        this.settingsService.setFontSize(val.fontSize as any);
+      }
+      if (val.uiDensity) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        this.settingsService.setDensity(val.uiDensity as any);
+      }
+      if (val.showLineNumbers !== undefined) {
+        this.settingsService.setShowLineNumbers(!!val.showLineNumbers);
+      }
+    });
+  }
+
   t = this.langService.t;
   uiStyles = this.langService.uiStyles;
   isGenerating = signal(false);
   generatedMarkdown = signal<string | null>(null);
+  previewMarkdown = computed(() => {
+    const markdown = this.generatedMarkdown();
+    if (!markdown) return '';
+
+    if (!this.settingsService.showLineNumbers()) {
+      return markdown;
+    }
+
+    const lines = markdown.split('\n');
+    const width = String(lines.length).length;
+    return lines
+      .map((line, index) => `${String(index + 1).padStart(width, ' ')} | ${line}`)
+      .join('\n');
+  });
+
   copySuccess = signal(false);
   error = signal<string | null>(null);
   showSettings = signal(false);
   isValidatingApiKey = signal(false);
   apiKeyStatus = signal<'idle' | 'valid' | 'invalid'>('idle');
+  showApiKeyRequiredDialog = signal(false);
+  showApiKeyGuideDialog = signal(false);
 
   settingsForm = this.fb.group({
     userApiKey: [this.settingsService.userApiKey()],
@@ -56,6 +93,11 @@ export class App {
   async onSubmit() {
     if (this.agentForm.invalid) {
       this.agentForm.markAllAsTouched();
+      return;
+    }
+
+    if (!this.settingsService.userApiKey().trim()) {
+      this.showApiKeyRequiredDialog.set(true);
       return;
     }
 
@@ -121,6 +163,25 @@ export class App {
     }
   }
 
+  openSettingsForApiKey() {
+    this.showApiKeyRequiredDialog.set(false);
+    if (!this.showSettings()) {
+      this.toggleSettings();
+    }
+  }
+
+  openApiKeyGuide() {
+    this.showApiKeyGuideDialog.set(true);
+  }
+
+  closeApiKeyGuide() {
+    this.showApiKeyGuideDialog.set(false);
+  }
+
+  closeApiKeyRequiredDialog() {
+    this.showApiKeyRequiredDialog.set(false);
+  }
+
   async validateApiKey() {
     const key = this.settingsForm.get('userApiKey')?.value;
     if (!key) return;
@@ -139,17 +200,6 @@ export class App {
   }
 
   saveSettings() {
-    const val = this.settingsForm.value;
-    if (val.userApiKey !== undefined) this.settingsService.setApiKey(val.userApiKey || '');
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    if (val.fontSize) this.settingsService.setFontSize(val.fontSize as any);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    if (val.uiDensity) this.settingsService.setDensity(val.uiDensity as any);
-    if (val.showLineNumbers !== undefined) {
-      if (this.settingsService.showLineNumbers() !== val.showLineNumbers) {
-        this.settingsService.toggleLineNumbers();
-      }
-    }
     this.showSettings.set(false);
   }
 
@@ -236,52 +286,4 @@ export class App {
     }
   }
 
-  async downloadPdf() {
-    const md = this.generatedMarkdown();
-    if (md) {
-      try {
-        // Dynamically import html2pdf to avoid SSR issues
-        const html2pdf = (await import('html2pdf.js')).default;
-        
-        const htmlContent = await marked.parse(md);
-        const isRtl = this.langService.lang() === 'fa';
-        
-        const element = document.createElement('div');
-        element.innerHTML = htmlContent;
-        element.style.padding = '20px';
-        element.style.fontFamily = 'system-ui, -apple-system, sans-serif';
-        element.style.lineHeight = '1.6';
-        element.style.color = '#1f2937';
-        element.dir = isRtl ? 'rtl' : 'ltr';
-        
-        // Add basic styles to the element for PDF rendering
-        const styleEl = document.createElement('style');
-        styleEl.textContent = `
-          h1, h2, h3 { color: #111827; border-bottom: 1px solid #e5e7eb; padding-bottom: 0.5rem; }
-          pre { background: #f3f4f6; padding: 1rem; border-radius: 0.5rem; white-space: pre-wrap; word-wrap: break-word; }
-          code { font-family: monospace; background: #f3f4f6; padding: 0.2rem 0.4rem; border-radius: 0.25rem; }
-          pre code { background: transparent; padding: 0; }
-          table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
-          th, td { border: 1px solid #e5e7eb; padding: 0.75rem; text-align: ${isRtl ? 'right' : 'left'}; }
-          th { background: #f9fafb; }
-        `;
-        element.appendChild(styleEl);
-
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const opt: any = {
-          margin:       10,
-          filename:     'AGENTS.pdf',
-          image:        { type: 'jpeg', quality: 0.98 },
-          html2canvas:  { scale: 2, useCORS: true },
-          jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        };
-        
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (html2pdf() as any).set(opt).from(element).save();
-      } catch (err) {
-        console.error('PDF generation error:', err);
-        this.error.set(this.t().errorPdf);
-      }
-    }
-  }
 }
