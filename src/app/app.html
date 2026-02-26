@@ -473,6 +473,15 @@
             } @else if (apiKeyStatus() === 'invalid') {
               <p class="text-[10px] font-bold text-rose-600 dark:text-rose-400 px-1">{{ t().keyInvalid }}</p>
             }
+
+            <button
+              type="button"
+              (click)="openApiKeyGuide()"
+              class="mt-2 inline-flex items-center gap-2 text-xs font-bold text-indigo-600 dark:text-indigo-300 px-3 py-2 rounded-xl bg-indigo-500/10 hover:bg-indigo-500/20 transition-colors"
+            >
+              <mat-icon class="text-base">help</mat-icon>
+              {{ t().apiKeyGuideButton }}
+            </button>
           </div>
 
           <!-- Display Settings -->
@@ -529,4 +538,64 @@
       </div>
     </div>
   }
+
+  @if (showApiKeyRequiredDialog()) {
+    <div class="fixed inset-0 z-[120] flex items-center justify-center p-4 sm:p-6">
+      <div class="absolute inset-0 bg-slate-950/70 backdrop-blur-sm" (click)="closeApiKeyRequiredDialog()" (keydown.escape)="closeApiKeyRequiredDialog()" tabindex="-1" role="button" aria-label="Close API key required dialog"></div>
+      <div class="relative w-full max-w-md glass-card p-6 sm:p-8 ring-1 ring-white/60 dark:ring-slate-700/40">
+        <div class="flex items-start gap-3">
+          <div class="w-10 h-10 rounded-xl bg-amber-500/15 text-amber-500 flex items-center justify-center">
+            <mat-icon>key</mat-icon>
+          </div>
+          <div class="flex-1">
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white">{{ t().apiKeyRequiredTitle }}</h3>
+            <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">{{ t().apiKeyRequiredDesc }}</p>
+          </div>
+        </div>
+
+        <div class="mt-6 flex items-center justify-end gap-3">
+          <button type="button" (click)="closeApiKeyRequiredDialog()" class="px-4 py-2 rounded-xl text-sm font-semibold text-slate-500 hover:text-slate-700 dark:hover:text-slate-200 transition-colors">
+            {{ t().close }}
+          </button>
+          <button type="button" (click)="openSettingsForApiKey()" class="px-4 py-2 rounded-xl text-sm font-semibold bg-indigo-500 text-white hover:bg-indigo-400 transition-colors inline-flex items-center gap-2">
+            <mat-icon class="text-base">settings</mat-icon>
+            {{ t().apiKeyGoToSettings }}
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (showApiKeyGuideDialog()) {
+    <div class="fixed inset-0 z-[130] flex items-center justify-center p-4 sm:p-6">
+      <div class="absolute inset-0 bg-slate-950/70 backdrop-blur-sm" (click)="closeApiKeyGuide()" (keydown.escape)="closeApiKeyGuide()" tabindex="-1" role="button" aria-label="Close API key guide dialog"></div>
+      <div class="relative w-full max-w-3xl glass-card p-6 sm:p-8 ring-1 ring-white/60 dark:ring-slate-700/40">
+        <div class="flex items-center justify-between gap-4">
+          <h3 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">{{ t().apiKeyGuideTitle }}</h3>
+          <button type="button" (click)="closeApiKeyGuide()" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 transition-colors">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+
+        <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+          <article class="rounded-2xl border border-slate-200/80 dark:border-slate-700/60 bg-white/60 dark:bg-slate-900/50 p-4 space-y-3">
+            <img src="help-step-1.svg" alt="API key guide step 1" class="w-full rounded-xl border border-slate-200/70 dark:border-slate-700/60" />
+            <h4 class="text-sm font-bold text-slate-900 dark:text-white">{{ t().apiKeyGuideStep1Title }}</h4>
+            <p class="text-xs text-slate-600 dark:text-slate-300">{{ t().apiKeyGuideStep1Desc }}</p>
+          </article>
+          <article class="rounded-2xl border border-slate-200/80 dark:border-slate-700/60 bg-white/60 dark:bg-slate-900/50 p-4 space-y-3">
+            <img src="help-step-2.svg" alt="API key guide step 2" class="w-full rounded-xl border border-slate-200/70 dark:border-slate-700/60" />
+            <h4 class="text-sm font-bold text-slate-900 dark:text-white">{{ t().apiKeyGuideStep2Title }}</h4>
+            <p class="text-xs text-slate-600 dark:text-slate-300">{{ t().apiKeyGuideStep2Desc }}</p>
+          </article>
+          <article class="rounded-2xl border border-slate-200/80 dark:border-slate-700/60 bg-white/60 dark:bg-slate-900/50 p-4 space-y-3">
+            <img src="help-step-3.svg" alt="API key guide step 3" class="w-full rounded-xl border border-slate-200/70 dark:border-slate-700/60" />
+            <h4 class="text-sm font-bold text-slate-900 dark:text-white">{{ t().apiKeyGuideStep3Title }}</h4>
+            <p class="text-xs text-slate-600 dark:text-slate-300">{{ t().apiKeyGuideStep3Desc }}</p>
+          </article>
+        </div>
+      </div>
+    </div>
+  }
+
 </div>

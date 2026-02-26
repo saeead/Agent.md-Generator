@@ -45,6 +45,8 @@ export class App {
   showSettings = signal(false);
   isValidatingApiKey = signal(false);
   apiKeyStatus = signal<'idle' | 'valid' | 'invalid'>('idle');
+  showApiKeyRequiredDialog = signal(false);
+  showApiKeyGuideDialog = signal(false);
 
   settingsForm = this.fb.group({
     userApiKey: [this.settingsService.userApiKey()],
@@ -71,6 +73,11 @@ export class App {
   async onSubmit() {
     if (this.agentForm.invalid) {
       this.agentForm.markAllAsTouched();
+      return;
+    }
+
+    if (!this.settingsService.userApiKey().trim()) {
+      this.showApiKeyRequiredDialog.set(true);
       return;
     }
 
@@ -134,6 +141,26 @@ export class App {
         showLineNumbers: this.settingsService.showLineNumbers(),
       });
     }
+  }
+
+
+  openSettingsForApiKey() {
+    this.showApiKeyRequiredDialog.set(false);
+    if (!this.showSettings()) {
+      this.toggleSettings();
+    }
+  }
+
+  openApiKeyGuide() {
+    this.showApiKeyGuideDialog.set(true);
+  }
+
+  closeApiKeyGuide() {
+    this.showApiKeyGuideDialog.set(false);
+  }
+
+  closeApiKeyRequiredDialog() {
+    this.showApiKeyRequiredDialog.set(false);
   }
 
   async validateApiKey() {
