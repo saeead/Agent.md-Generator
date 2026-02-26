@@ -3,6 +3,7 @@ import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { ThemeService } from './theme.service';
 import { LanguageService } from './language.service';
 import { GeminiService } from './gemini.service';
+import { SettingsService } from './settings.service';
 import { MatIconModule } from '@angular/material/icon';
 import { marked } from 'marked';
 
@@ -17,6 +18,7 @@ export class App {
   private fb = inject(FormBuilder);
   themeService = inject(ThemeService);
   langService = inject(LanguageService);
+  settingsService = inject(SettingsService);
   private geminiService = inject(GeminiService);
 
   t = this.langService.t;
@@ -25,6 +27,16 @@ export class App {
   generatedMarkdown = signal<string | null>(null);
   copySuccess = signal(false);
   error = signal<string | null>(null);
+  showSettings = signal(false);
+  isValidatingApiKey = signal(false);
+  apiKeyStatus = signal<'idle' | 'valid' | 'invalid'>('idle');
+
+  settingsForm = this.fb.group({
+    userApiKey: [this.settingsService.userApiKey()],
+    fontSize: [this.settingsService.fontSize()],
+    uiDensity: [this.settingsService.uiDensity()],
+    showLineNumbers: [this.settingsService.showLineNumbers()],
+  });
 
   agentForm = this.fb.group({
     projectName: ['', Validators.required],
@@ -94,6 +106,61 @@ export class App {
     } finally {
       this.isGenerating.set(false);
     }
+  }
+
+  toggleSettings() {
+    this.showSettings.set(!this.showSettings());
+    if (this.showSettings()) {
+      this.apiKeyStatus.set('idle');
+      this.settingsForm.patchValue({
+        userApiKey: this.settingsService.userApiKey(),
+        fontSize: this.settingsService.fontSize(),
+        uiDensity: this.settingsService.uiDensity(),
+        showLineNumbers: this.settingsService.showLineNumbers(),
+      });
+    }
+  }
+
+  async validateApiKey() {
+    const key = this.settingsForm.get('userApiKey')?.value;
+    if (!key) return;
+
+    this.isValidatingApiKey.set(true);
+    this.apiKeyStatus.set('idle');
+
+    try {
+      const isValid = await this.geminiService.validateApiKey(key);
+      this.apiKeyStatus.set(isValid ? 'valid' : 'invalid');
+    } catch {
+      this.apiKeyStatus.set('invalid');
+    } finally {
+      this.isValidatingApiKey.set(false);
+    }
+  }
+
+  saveSettings() {
+    const val = this.settingsForm.value;
+    if (val.userApiKey !== undefined) this.settingsService.setApiKey(val.userApiKey || '');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if (val.fontSize) this.settingsService.setFontSize(val.fontSize as any);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if (val.uiDensity) this.settingsService.setDensity(val.uiDensity as any);
+    if (val.showLineNumbers !== undefined) {
+      if (this.settingsService.showLineNumbers() !== val.showLineNumbers) {
+        this.settingsService.toggleLineNumbers();
+      }
+    }
+    this.showSettings.set(false);
+  }
+
+  resetSettings() {
+    this.settingsService.reset();
+    this.settingsForm.patchValue({
+      userApiKey: '',
+      fontSize: 'medium',
+      uiDensity: 'comfortable',
+      showLineNumbers: true,
+    });
   }
 
   async copyToClipboard() {

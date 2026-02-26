@@ -1,16 +1,41 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { GoogleGenAI } from '@google/genai';
+import { SettingsService } from './settings.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GeminiService {
-  private ai: GoogleGenAI;
-  private apiKey: string;
+  private settingsService = inject(SettingsService);
+  private ai: GoogleGenAI | null = null;
+  private currentApiKey = '';
 
-  constructor() {
-    this.apiKey = typeof GEMINI_API_KEY !== 'undefined' ? GEMINI_API_KEY : '';
-    this.ai = new GoogleGenAI({ apiKey: this.apiKey });
+  private getAiInstance(customKey?: string): GoogleGenAI {
+    const envKey = typeof GEMINI_API_KEY !== 'undefined' ? GEMINI_API_KEY : '';
+    const effectiveKey = customKey !== undefined ? customKey : this.settingsService.getEffectiveApiKey(envKey);
+
+    if (!this.ai || this.currentApiKey !== effectiveKey) {
+      this.currentApiKey = effectiveKey;
+      this.ai = new GoogleGenAI({ apiKey: effectiveKey });
+    }
+    return this.ai;
+  }
+
+  async validateApiKey(key: string): Promise<boolean> {
+    if (!key) return false;
+    try {
+      const ai = new GoogleGenAI({ apiKey: key });
+      // Use a very simple and cheap call to validate the key
+      await ai.models.generateContent({
+        model: 'gemini-3-flash-preview',
+        contents: 'hi',
+        config: { maxOutputTokens: 1 }
+      });
+      return true;
+    } catch (error) {
+      console.error('API Key validation failed:', error);
+      return false;
+    }
   }
 
   async generateAgentMd(data: {
@@ -69,13 +94,17 @@ Do not include any introductory or concluding remarks outside of the Markdown co
 `;
 
     try {
-      if (!this.apiKey) {
+      const ai = this.getAiInstance();
+      const envKey = typeof GEMINI_API_KEY !== 'undefined' ? GEMINI_API_KEY : '';
+      const effectiveKey = this.settingsService.getEffectiveApiKey(envKey);
+
+      if (!effectiveKey) {
         throw new Error('API_KEY_MISSING');
       }
 
       const response = await Promise.race([
-        this.ai.models.generateContent({
-          model: 'gemini-3.1-pro-preview',
+        ai.models.generateContent({
+          model: 'gemini-3-flash-preview',
           contents: prompt,
         }),
         new Promise<never>((_, reject) => 
