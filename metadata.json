@@ -1,0 +1,5 @@
+{
+  "name": "Agent.md Generator",
+  "description": "Generate professional AGENT.md files for AI-assisted coding using Gemini.",
+  "requestFramePermissions": []
+}
