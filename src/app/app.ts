@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { ThemeService } from './theme.service';
 import { LanguageService } from './language.service';
@@ -25,6 +25,21 @@ export class App {
   uiStyles = this.langService.uiStyles;
   isGenerating = signal(false);
   generatedMarkdown = signal<string | null>(null);
+  previewMarkdown = computed(() => {
+    const markdown = this.generatedMarkdown();
+    if (!markdown) return '';
+
+    if (!this.settingsService.showLineNumbers()) {
+      return markdown;
+    }
+
+    const lines = markdown.split('\n');
+    const width = String(lines.length).length;
+    return lines
+      .map((line, index) => `${String(index + 1).padStart(width, ' ')} | ${line}`)
+      .join('\n');
+  });
+
   copySuccess = signal(false);
   error = signal<string | null>(null);
   showSettings = signal(false);
