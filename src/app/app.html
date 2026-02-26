@@ -2,17 +2,17 @@
   <!-- Background Elements -->
   <div class="liquid-bg"></div>
   <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-500/20 rounded-full blur-[120px] animate-pulse"></div>
-  <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-pink-500/20 rounded-full blur-[120px] animate-pulse" style="animation-delay: 2s;"></div>
+  <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-violet-400/25 rounded-full blur-[120px] animate-pulse" style="animation-delay: 2s;"></div>
 
   <!-- Header -->
   <header class="relative z-20 glass-panel border-b-0 m-4 rounded-3xl">
     <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
       <div class="flex items-center gap-4">
-        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white shadow-lg transform rotate-3 hover:rotate-0 transition-transform duration-300">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center text-white shadow-lg transform rotate-3 hover:rotate-0 transition-transform duration-300">
           <mat-icon class="text-3xl">auto_fix_high</mat-icon>
         </div>
         <div>
-          <h1 class="text-xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 leading-tight">{{ t().title }}</h1>
+          <h1 class="text-xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-500 dark:from-indigo-300 dark:via-violet-300 dark:to-sky-300 leading-tight">{{ t().title }}</h1>
           <p class="text-[10px] uppercase tracking-widest font-bold text-slate-500 dark:text-slate-400 opacity-80">{{ t().subtitle }}</p>
         </div>
       </div>
@@ -228,7 +228,7 @@
           </div>
 
           <!-- Fill Empty Fields Checkbox -->
-          <div class="flex items-center gap-4 mt-2 p-5 rounded-2xl bg-indigo-500/10 dark:bg-indigo-400/10 border border-indigo-500/20 dark:border-indigo-400/20 backdrop-blur-md">
+          <div class="flex items-center gap-4 mt-2 p-5 rounded-2xl bg-indigo-500/10 dark:bg-indigo-300/10 border border-indigo-400/30 dark:border-indigo-300/25 backdrop-blur-md">
             <div class="relative flex items-center">
               <input 
                 type="checkbox" 
@@ -237,7 +237,7 @@
                 class="w-6 h-6 rounded-lg border-slate-300 dark:border-slate-600 text-indigo-600 focus:ring-indigo-500 dark:bg-slate-800 cursor-pointer"
               >
             </div>
-            <label for="fillEmptyFields" class="text-sm font-semibold text-indigo-900 dark:text-indigo-200 cursor-pointer select-none">
+            <label for="fillEmptyFields" class="text-sm font-semibold text-indigo-900 dark:text-indigo-100 cursor-pointer select-none">
               {{ t().fillEmptyFields }}
             </label>
           </div>
@@ -246,7 +246,7 @@
           <button 
             type="submit" 
             [disabled]="agentForm.invalid || isGenerating()"
-            class="glass-button mt-2 w-full flex items-center justify-center gap-3 px-8 py-4.5 rounded-2xl font-bold text-lg shadow-indigo-500/20"
+            class="glass-button mt-2 w-full flex items-center justify-center gap-3 px-8 py-4.5 rounded-2xl font-bold text-lg shadow-indigo-500/25"
           >
             @if (isGenerating()) {
               <mat-icon class="animate-spin">sync</mat-icon>
@@ -310,7 +310,7 @@
             <button 
               (click)="downloadHtml()"
               [disabled]="!generatedMarkdown()"
-              class="flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-xl bg-indigo-500 hover:bg-indigo-600 text-white transition-all disabled:opacity-30"
+              class="flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-xl bg-indigo-500 hover:bg-indigo-400 text-white transition-all disabled:opacity-30"
               [title]="t().downloadHtml"
             >
               <mat-icon class="scale-90">html</mat-icon>
@@ -319,7 +319,7 @@
             <button 
               (click)="downloadPdf()"
               [disabled]="!generatedMarkdown()"
-              class="flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-xl bg-rose-500 hover:bg-rose-600 text-white transition-all disabled:opacity-30"
+              class="flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-xl bg-violet-500 hover:bg-violet-400 text-white transition-all disabled:opacity-30"
               [title]="t().downloadPdf"
             >
               <mat-icon class="scale-90">picture_as_pdf</mat-icon>
@@ -333,12 +333,12 @@
           @if (generatedMarkdown()) {
             <div class="relative">
               <div class="absolute top-0 left-0 w-full h-full pointer-events-none bg-gradient-to-b from-transparent via-transparent to-white/5 dark:to-slate-900/5"></div>
-              <pre class="whitespace-pre-wrap text-slate-800 dark:text-slate-200 leading-relaxed selection:bg-indigo-500/30">{{ generatedMarkdown() }}</pre>
+              <pre class="whitespace-pre-wrap text-slate-800 dark:text-slate-200 leading-relaxed selection:bg-indigo-400/35">{{ generatedMarkdown() }}</pre>
             </div>
           } @else if (isGenerating()) {
             <div class="h-full flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 gap-6">
               <div class="relative">
-                <div class="w-20 h-20 rounded-full border-4 border-indigo-500/20 border-t-indigo-500 animate-spin"></div>
+                <div class="w-20 h-20 rounded-full border-4 border-indigo-400/30 border-t-indigo-500 animate-spin"></div>
                 <mat-icon class="absolute inset-0 m-auto text-3xl text-indigo-500 animate-pulse">auto_awesome</mat-icon>
               </div>
               <p class="font-bold tracking-widest uppercase text-xs animate-pulse">{{ t().generating }}</p>
