@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360" fill="none">
+  <rect width="640" height="360" rx="24" fill="#F5F3FF"/>
+  <rect x="32" y="32" width="576" height="296" rx="16" fill="white" stroke="#DDD6FE"/>
+  <text x="56" y="80" fill="#6D28D9" font-size="28" font-family="Arial" font-weight="700">2. Create API Key</text>
+  <rect x="56" y="120" width="240" height="54" rx="12" fill="#7C3AED"/>
+  <text x="84" y="154" fill="white" font-size="20" font-family="Arial" font-weight="700">Create API key</text>
+  <rect x="56" y="204" width="528" height="64" rx="10" fill="#F8FAFC" stroke="#E2E8F0"/>
+  <text x="72" y="244" fill="#334155" font-size="18" font-family="Arial">AIzaSy**********************</text>
+</svg>

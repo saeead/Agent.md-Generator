@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360" fill="none">
+  <rect width="640" height="360" rx="24" fill="#EEF2FF"/>
+  <rect x="32" y="32" width="576" height="296" rx="16" fill="white" stroke="#C7D2FE"/>
+  <text x="56" y="80" fill="#4338CA" font-size="28" font-family="Arial" font-weight="700">1. Open Google AI Studio</text>
+  <rect x="56" y="110" width="528" height="52" rx="10" fill="#F8FAFC" stroke="#E2E8F0"/>
+  <text x="72" y="143" fill="#334155" font-size="20" font-family="Arial">https://aistudio.google.com</text>
+  <circle cx="96" cy="236" r="30" fill="#DBEAFE"/>
+  <text x="85" y="244" fill="#1D4ED8" font-size="22" font-family="Arial" font-weight="700">G</text>
+  <text x="150" y="230" fill="#334155" font-size="20" font-family="Arial">Sign in with your Google account</text>
+</svg>
