@@ -59,11 +59,22 @@ body {
   font-family: "Inter", sans-serif;
 }
 
-/* Custom Scrollbar */
-.custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
+/* UI Density Classes */
+.density-compact .glass-card { @apply p-4; }
+.density-compact .glass-panel { @apply m-2 rounded-2xl; }
+.density-compact .max-w-7xl { @apply max-w-full; }
+.density-compact .h-20 { @apply h-14; }
+.density-compact .gap-6 { @apply gap-3; }
+.density-compact .p-8 { @apply p-4; }
+.density-compact .py-3\.5 { @apply py-2; }
+.density-compact .py-4\.5 { @apply py-3; }
+
+.density-spacious .glass-card { @apply p-12; }
+.density-spacious .gap-6 { @apply gap-10; }
+.density-spacious .p-8 { @apply p-12; }
+.density-spacious .py-3\.5 { @apply py-5; }
+.density-spacious .py-4\.5 { @apply py-6; }
+
 
 .custom-scrollbar::-webkit-scrollbar-track {
   background: transparent;
