@@ -104,7 +104,7 @@ Do not include any introductory or concluding remarks outside of the Markdown co
 
       const response = await Promise.race([
         ai.models.generateContent({
-          model: 'gemini-3.1-pro-preview',
+          model: 'gemini-3-flash-preview',
           contents: prompt,
         }),
         new Promise<never>((_, reject) => 

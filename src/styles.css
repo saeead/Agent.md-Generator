@@ -15,7 +15,7 @@ html, body {
 }
 
 body {
-  @apply bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-200;
+  @apply font-sans bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-200;
 }
 
 .liquid-bg {
@@ -52,10 +52,12 @@ body {
 }
 
 [dir="rtl"] {
-  font-family: "Vazirmatn", sans-serif;
+  --font-sans: "Vazirmatn", "Vazir", Tahoma, Arial, sans-serif;
+  font-family: "Vazirmatn", "Vazir", Tahoma, Arial, sans-serif;
 }
 
 [dir="ltr"] {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   font-family: "Inter", sans-serif;
 }
 
