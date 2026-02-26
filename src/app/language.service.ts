@@ -54,6 +54,8 @@ export const TRANSLATIONS = {
   en: {
     title: 'AGENTS.md Generator',
     subtitle: 'Create professional AI coding guidelines for your project based on agents.md standard',
+    promptContext: 'Prompt Context',
+    advancedInputs: 'Advanced Inputs',
     projectName: 'Project Name',
     projectDescription: 'Project Description',
     techStack: 'Tech Stack',
@@ -135,6 +137,8 @@ export const TRANSLATIONS = {
   fa: {
     title: 'سازنده AGENTS.md',
     subtitle: 'ایجاد راهنمای حرفه‌ای کدنویسی هوش مصنوعی بر اساس استاندارد agents.md',
+    promptContext: 'کانتکست پرامپت',
+    advancedInputs: 'فیلدهای پیشرفته',
     projectName: 'نام پروژه',
     projectDescription: 'توضیحات پروژه',
     techStack: 'تکنولوژی‌ها',

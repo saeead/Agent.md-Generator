@@ -19,7 +19,7 @@ export class ThemeService {
       const savedTheme = localStorage.getItem('theme') as Theme | null;
       if (savedTheme) {
         this.setTheme(savedTheme);
-      } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      } else if (typeof window.matchMedia === 'function' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
         this.setTheme('dark');
       } else {
         this.setTheme('light');
