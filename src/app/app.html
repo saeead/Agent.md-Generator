@@ -53,7 +53,12 @@
     
     <!-- Form Section -->
     <div class="lg:col-span-5 flex flex-col gap-6 h-[calc(100vh-9rem)] overflow-y-auto pr-2 custom-scrollbar pb-4">
-      <div class="glass-card p-8 ring-1 ring-white/60 dark:ring-slate-700/40">
+      <div class="glass-card p-8 ring-1 ring-white/60 dark:ring-slate-700/40 space-y-6">
+        <div class="rounded-2xl border border-indigo-200/70 dark:border-indigo-500/30 bg-indigo-50/60 dark:bg-indigo-500/5 px-4 py-3">
+          <p class="text-xs font-bold uppercase tracking-[0.18em] text-indigo-600 dark:text-indigo-300">{{ t().promptContext }}</p>
+          <p class="mt-1 text-xs text-indigo-900/80 dark:text-indigo-100/80">{{ t().subtitle }}</p>
+        </div>
+
         <form [formGroup]="agentForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-6">
           
           <!-- Project Name -->
@@ -144,6 +149,12 @@
                 </div>
               </div>
             </div>
+          </div>
+
+          <div class="flex items-center gap-3 pt-1">
+            <div class="h-px flex-1 bg-indigo-200/80 dark:bg-indigo-400/20"></div>
+            <span class="text-[10px] uppercase tracking-[0.18em] font-bold text-indigo-500 dark:text-indigo-300">{{ t().advancedInputs }}</span>
+            <div class="h-px flex-1 bg-indigo-200/80 dark:bg-indigo-400/20"></div>
           </div>
 
           <!-- Advanced Fields (Collapsible or just listed) -->
