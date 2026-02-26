@@ -10,7 +10,7 @@
   <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-violet-400/25 rounded-full blur-[120px] animate-pulse" style="animation-delay: 2s;"></div>
 
   <!-- Header -->
-  <header class="relative z-20 glass-panel border-b-0 m-4 rounded-3xl">
+  <header class="relative z-20 glass-panel border-b-0 m-4 rounded-3xl ring-1 ring-white/40 dark:ring-slate-700/40">
     <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
       <div class="flex items-center gap-4">
         <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center text-white shadow-lg transform rotate-3 hover:rotate-0 transition-transform duration-300">
@@ -49,11 +49,11 @@
   </header>
 
   <!-- Main Content -->
-  <main class="relative z-10 flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pb-8 grid grid-cols-1 lg:grid-cols-12 gap-6 overflow-hidden">
+  <main class="relative z-10 flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pb-8 pt-2 grid grid-cols-1 lg:grid-cols-12 gap-6 overflow-hidden">
     
     <!-- Form Section -->
     <div class="lg:col-span-5 flex flex-col gap-6 h-[calc(100vh-9rem)] overflow-y-auto pr-2 custom-scrollbar pb-4">
-      <div class="glass-card p-8">
+      <div class="glass-card p-8 ring-1 ring-white/60 dark:ring-slate-700/40">
         <form [formGroup]="agentForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-6">
           
           <!-- Project Name -->
@@ -281,10 +281,10 @@
 
     <!-- Preview Section -->
     <div class="lg:col-span-7 flex flex-col h-[calc(100vh-9rem)]">
-      <div class="glass-card flex flex-col h-full overflow-hidden">
+      <div class="glass-card flex flex-col h-full overflow-hidden ring-1 ring-white/60 dark:ring-slate-700/40">
         
         <!-- Preview Header -->
-        <div class="flex items-center justify-between px-8 py-5 border-b border-white/20 dark:border-slate-700/20 bg-white/20 dark:bg-slate-800/20 backdrop-blur-xl">
+        <div class="flex items-center justify-between px-8 py-5 border-b border-white/40 dark:border-slate-700/40 bg-white/35 dark:bg-slate-800/35 backdrop-blur-xl">
           <div class="flex items-center gap-3">
             <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
             <h2 class="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">
@@ -342,7 +342,7 @@
 
         <!-- Preview Content -->
         <div 
-          class="flex-1 p-8 overflow-y-auto bg-white/5 dark:bg-slate-950/5 font-mono custom-scrollbar" 
+          class="flex-1 p-8 overflow-y-auto bg-white/40 dark:bg-slate-950/30 font-mono custom-scrollbar" 
           [class.text-xs]="settingsService.fontSize() === 'small'"
           [class.text-sm]="settingsService.fontSize() === 'medium'"
           [class.text-base]="settingsService.fontSize() === 'large'"
