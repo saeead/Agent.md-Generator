@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { ThemeService } from './theme.service';
 import { LanguageService } from './language.service';
@@ -20,6 +21,25 @@ export class App {
   langService = inject(LanguageService);
   settingsService = inject(SettingsService);
   private geminiService = inject(GeminiService);
+
+  constructor() {
+    this.settingsForm.valueChanges.pipe(takeUntilDestroyed()).subscribe((val) => {
+      if (val.userApiKey !== undefined) {
+        this.settingsService.setApiKey((val.userApiKey || '').trim());
+      }
+      if (val.fontSize) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        this.settingsService.setFontSize(val.fontSize as any);
+      }
+      if (val.uiDensity) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        this.settingsService.setDensity(val.uiDensity as any);
+      }
+      if (val.showLineNumbers !== undefined) {
+        this.settingsService.setShowLineNumbers(!!val.showLineNumbers);
+      }
+    });
+  }
 
   t = this.langService.t;
   uiStyles = this.langService.uiStyles;
@@ -181,17 +201,6 @@ export class App {
   }
 
   saveSettings() {
-    const val = this.settingsForm.value;
-    if (val.userApiKey !== undefined) this.settingsService.setApiKey(val.userApiKey || '');
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    if (val.fontSize) this.settingsService.setFontSize(val.fontSize as any);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    if (val.uiDensity) this.settingsService.setDensity(val.uiDensity as any);
-    if (val.showLineNumbers !== undefined) {
-      if (this.settingsService.showLineNumbers() !== val.showLineNumbers) {
-        this.settingsService.toggleLineNumbers();
-      }
-    }
     this.showSettings.set(false);
   }
 
